@@ -7,4 +7,5 @@ metadata:
   nameSpace: git.ns
   spec:
     git
+    origin
 
