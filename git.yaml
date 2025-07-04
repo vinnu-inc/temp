@@ -8,4 +8,6 @@ metadata:
   spec:
     git
     origin
+    main
+
 
