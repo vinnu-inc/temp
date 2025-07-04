@@ -1,0 +1,1476 @@
+Kubernetes?
+
+kubernetes is an ochestration engine and open source platform
+for managing containerized application.
+
+Resposibilities include container deployment,scaling & de scaling
+of containers & container load balancing.
+
+Actually,kubernetes is not replacement for docker,but kubernetes can be
+considered as a replacement for Docker swarm, kuberneties is significantly more
+complex than swarm and requires more work to deploy.
+
+born in google, written in go language donated to Cloud native computing foundation
+(CNCF) in 2014
+
+kubernetes v1.0 was released on july 21 2015
+
+Kubernetes feature:
+Automated scheduling
+self healing capabilities
+automated rollouts&rollback
+Horizontal auto-scaling & load balancing
+Service discovery & load balancing
+storage Orchestration 
+
+K8s is a container Orchestration Management platform/software.
+
+K8s is implimented in cluster computing background.
+In k8s cluster we will have group of servers/node/systems.
+
+In that group one or more nodes(serves) acts a masters rest of the nodes
+act as workers.
+
+Master-->
+Worker-->
+
+
+
+
+A container run time, also know as container engine is a software 
+component that can run containers on a host operating system.
+
+container run time software 
+Ex:container-D,core-OS,Rocket,Docker
+
+container runtime intraface(CRI)
+
+kubelet
+=======
+It works as a node-level agent to help with container management and orchestration within a Kubernetes cluster, Kubelet facilitates communication between the Kubernetes control plane and individual nodes.
+
+kubeproxy
+=========
+kube proxy enables the Kubernetes service abstraction by maintaining network rules on the host and performing connection forwardin g.
+•
+kube proxy maintains network rules on nodes. These network rules allow network communication to your Pods from inside or outside o f your cluster.
+•
+It helps us to have network proxy and load balancer for the services in a single worker node..
+•
+Service is just a logical concept, the real work is being done by the “ kube proxy” pod that is running on each node.
+•
+It redirect requests from Cluster IP(Virtual IP Address) to Pod IP.
+
+
+ETCD--> 
+=======
+an open source distributed key-value store used to hold and manage the critical information that distributed systems need to keep running,manages the configuration data, state data, and metadata for Kubernetes
+
+
+kubernetes resource:
+===================
+POD
+DEPLOYMENTS
+SERVICES
+DAEMONSETS
+STATEFULSET
+REPLICATIONCONTROLLR
+PERSISTENVOLUME
+ConfigAMP
+Secrets
+----------------------------------------------------------------------
+
+Day-2
+=====
+1) Local node kubernetes cluster (or) single node kubernetes cluster.
+
+minikube
+========
+Minikube is a tool that lets you run Kubernetes locally. minikube runs an all-in-one or a multi-node local Kubernetes cluster on your personal computer (including Windows, macOS and Linux PCs) so that you can try out Kubernetes, or for daily development work.
+
+kind
+====
+kind lets you run Kubernetes on your local computer. This tool requires that you have either Docker or Podman installed.
+
+The kind Quick Start page shows you what you need to do to get up and running with kind.
+ Install kind in a local server/computer
+
+kubectl is a k8s primery agent software
+kubelet
+kubeproxy
+kubeadm :api servers,scheduers,etcd.. boot straf for kubrnetes, multi k8s master, multi node, it will help setup the k8s
+
+Multinode kubernetes clusters
+=============================
+
+  1) self managed k8s cluster or Baremetal k8s clusters 
+--->kubeadm: Kubeadm is a tool built to provide kubeadm init and     kubeadm join as best-practice "fast paths" for creating     Kubernetes clusters.
+
+    kubeadm performs the actions necessary to get a minimum viable     cluster up and running. By design, it cares only about     bootstrapping, not about provisioning machines. Likewise,     installing various nice-to-have addons, like the Kubernetes     Dashboard, monitoring solutions, and cloud-specific addons, is     not in scope. 
+--->kubespray: it internally use as kubeadm only,it will coes with                   ansible play books
+  
+  2) managed k8s cluster or fully managed k8s
+     AWS---> EKS (Elastic k8s services)
+     Azure-> AKS (Azure k8s service)
+     GCP---> GKE (Google k8s Enginee)
+     IBM---> IKE (IBM k8s Enginee)
+     Oracle cloud--> OKE (Oracle k8s Enginee)
+
+OSS---> Open Source Software
+Kubernetes is open source giving you the freedom to take advantage
+of on-premises,hybrid or public cloud infrastructure,letting you
+effortlessly move woklooads(Applications) to where it matters to you.
+
+KOPS--> k8s operations, using KOPS we can setup production ready highly available k8s cluster in AWS cloud.
+
+KOPS will leavrage(Use) cloud concepts like Auto scaling group & its
+templets
+
+KOPS will internally create 2 (Auto scaling group) ASG &its launch.
+
+1 ASG & its launch templet for master(S)
+
+1 ASG & its launch templet for worker(S)
+
+---------------------------------------------------------------------
+Day-3
+=====
+
+Using kubeadm setup the cluster:
+
+1system as master node
+2system as worker node
+
+check required ports
+
+Master node or control plane
+============================
+Protocol   Direction   Port-Range    Purpose                    Used-by
+===================================================================================
+TCP        INBOUND     6443          K8S API SERVER             All
+TCP        INBOUND     2379-2380     etcd server client API     kube-apiserver,etcd
+TCP        INBOUND     10250         kubelet API                Self,control plane
+TCP        INBOUND     10251         Kube-scheduler             self
+TCP        INBOUND     10252         Kube-controller-manager    self
+===================================================================================
+
+Worker node
+===========
+Protocol   Direction   Port-Range    Purpose                    Used-by
+TCP        Inbound     10250         Kubelet-API                Self control plane
+TCP        Inbound     10256         Kube-proxy                 self-load balancer
+TCP        Inbound     30000-32767   NodePort service           All
+===================================================================================
+
+Swap Memory
+==========
+The default behavior of a kubelet is to fail to start if swap memory is detected on a node. This means that swap should either be disabled or tolerated by kubele
+
+To disable swap--> 
+# sudo swapoff -a 
+can be used to disable swapping temporarily. To make this change persistent across reboots, make sure swap is disabled in config files like /etc/fstab, systemd.swap, depending how it was configured on your system
+
+kubeadm: the command to bootstrap the cluster.
+kubelet: the component that runs on all of the machines in
+your cluster and does things like starting pods and containers.
+kubectl: the command line util to talk to your cluster.
+
+#kubectl get nodes
+
+#
+kubectl get all -n kube-system -o wide
+
+----------------------------------------------------------------------
+Day-4
+=====
+# kube config file
+ls -lar ~/.kube/
+cat ~/.kube/config
+
+cluster
+users
+
+# kuberneties resources
+
+kubectl api-resources
+
+# to know how many nodes
+kubectl get nodes
+
+# verbose option
+
+kubectl get nodes -v=8
+
+K8s Objects/API Resources
+
+Namespace
+Pod
+Service
+Replicationcontroller
+ReplicaSet
+DaemonSet
+Deployment
+StatefulSet
+--------------------
+
+ConfigMap
+Secret
+--------------------
+
+HorizontalAutoScaler
+--------------------
+Service
+Ingress
+Networkpolices
+--------------------
+Role
+Rolebinding
+clusterrole binding
+--------------------
+Persistent Volume Claim
+Persistent Volume
+Storageclass
+--------------------
+Node
+====
+
+Kubernetes runs your workload(Application) by placing into pods to run nodes.
+that node can be physical machine or virtual machine depends on cluster.
+each nodes is controlled by the control plane.
+
+Kubernetes Name space:
+======================
+kubectl get ns
+
+Namespaces: 
+In Kubernetes, namespaces provide a mechanism for isolating groups of resources within a single cluster. Names of resources need to be unique within a namespace, but not across namespaces. Namespace-based scoping is applicable only for namespaced objects (e.g. Deployments, Services, etc.) and not for cluster-wide objects (e.g. StorageClass, Nodes, PersistentVolumes, etc.)
+============================================
+Default NameSpace for Kubernetes creatd automatically:
+
+Default:
+Kube-system:
+Kube-public:
+Kube-node-lease:
+=============================================
+
+Reason for isolation namspace:
+Isolation
+Permission
+resource control
+performance
+=============================================
+
+#
+kubectl get all -n kube-system
+
+#
+kubectl get all -n kube-node-lease
+
+Imperative way
+==============
+
+Kubectl create namespace test-ns
+Kubectl lable namespace test-ns team=testing
+
+Declarative way
+===============
+apiVersion: v1'
+Kind: Namespace
+metadata:
+  name: test-ns
+  lables:
+    team: testing
+    manager: Rajesh
+-----
+ apiVersion: v1
+ kind: ResourceQuota
+ metadata:
+   name: computer-resource
+   namespace: test-ns
+ spec:
+   hard:
+   pods: 2
+   count/deployment.apps: 1
+   requests.cpu: "1"
+   requests.memory: 1Gi
+   limits.cpu: "2"
+   limits.memory: 2Gi
+   requests.nvidia.com/gpu: 4
+----------------------------------------------------------------------
+Day-5
+=====
+
+Pods
+====
+
+Pods
+Pods are the smallest deployable units of computing that you can create and manage in Kubernetes.
+A Pod is a group of one or more containers, with shared storage and network resources, and a specification for how to run the containers.
+
+A Pod's contents are always co-located and co-scheduled, and run in a shared context
+
+You need to install a container runtime into each node in the cluster so that Pods can run there.
+
+single container pod:
+====================
+The "one-container-per-Pod" model is the most common Kubernetes use case; in this case, you can think of a Pod as a wrapper around a single container; Kubernetes manages Pods rather than managing the containers directly.
+
+multiple containers pod:
+========================
+multiple containers that need to work together. A Pod can encapsulate an application composed of multiple co-located containers that are tightly coupled and need to share resources. These co-located containers form a single cohesive unit.
+
+what is comman for which is running in the pod?
+
+Ans) Network and storage
+
+
+
+Shared Network Namespace:
+=========================
+All the containers in the pod share
+the same network namespace
+which means all containers can
+communicate with each other on
+the localhost
+
+Shared Storage Volumes:
+=======================
+All the containers in a POD can have
+the same volume mounted so that
+they can communicate with each
+other by reading and modifying files in
+the storage volume.
+
+
+
+How to create Pods?
+==================
+
+K8s Objects or Resources can be created/updated using 2ways?
+
+Imperative way:
+==============
+ex:
+ kubctl create namespace <namespace>
+kubectl run <podName> --image dockerhandson/java-web-app:1 --port 8080
+
+kubectl run mavenwebapp --image=dockerhandson/maven-web-app:1 --port=8080 --lables "app=mavenwebapp" "app=mavenwebapp" -n test=ns 
+
+
+Declarative Way:
+===============
+
+kubectl run <PodName> --image=<image> --env="Key=value" --port=<containerport> --labels "key=value"
+
+Declarative way using k8s manifest:
+
+
+apiVersion: V1
+kind: pod
+metadata:
+  name: <podName>
+  lables: 
+     <key>: <NameSpace>
+spec:
+  containers:
+  - name: <containerName>
+    image: <image>
+    ports:
+    - containerPort: <containeerPort>
+    env:
+    - <KEY>=<VALUE>
+    - <KEY>=<VALUE>
+    command:
+    - "<args>"
+    - "<args>"
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+       limits:
+         cpu: 1
+         memory: 2Gi
+    volumeMounts:
+    - name: <volumeName>
+    mountPath: <containerDir>
+
+---------------------------------------------------------------------
+Day-6
+=====
+# below commands to discribe pod
+
+kubectl discribe pod <podName> -n <Namespace>
+
+kubectl discribe pod <podName> -n <Namespace> -o wide
+
+
+# to show lables
+kubectl discribe pod <podName> -n <Namespace> -o wide --show-lables
+
+kubectl logs <PodName> -n <nameSpace>
+
+# below command runs in container shell ps -ef runs in container shell, you can execute any coomand after -- <ls , ls -lar..etc>
+
+kubectl exec <PodName> -n <Namespace> -- ps -ef
+
+# to connect into container shell
+
+kubectl exec -it <podName> -n <NameSpace> --bash
+
+# come out of container shell--> type "exit" enter
+
+we cannot connect to pods ips and network from other servers even though you have installed kubectl and controlling pods and netwok deletion, you cannot connect pods using ip with port numbers.
+
+Service
+=======
+A service is responsible for making our Pods discoverable inside the network or exposing them to the internet. 
+A Service identif ies Pods by its LabelSelector
+Types of services available:
+
+ClusterIP
+Exposes the service on a cluster internal IP. Service is only reachable from within the cluster. This is the default Type.
+
+When we create a service we will get one Virtual IP (Cluster IP) it will get registered to the DNS( kube dns ). Using this Other
+PODS can find and talk the pods of this service using service name.
+
+Service is just a logical concept, the real work is being done by the “ kube proxy” pod that is running on each node.
+•
+It redirect requests from Cluster IP(Virtual IP Address) to Pod IP.
+
+# to know resources for APIVERSIONS
+
+kubectl api-resources
+
+to create the service in declarative way
+
+apiVersion: V1
+kind: Service
+metadata:
+   name: <srviceName>
+   namespace: <NameSpace>
+lables:
+  <Key>: <value>
+spec:
+ type: ClusterIP
+ selector: <Pod lables are used as selectors here>
+  <Key>: <value>
+ ports:
+ -port: 
+  - port: <servicePort>
+    targetPort: <containerPort>
+
+
+example to create service
+=========================
+ __create a yml file on name mavenwebapp.yml__ 
+-----------------------------------------------------
+apiVersion: v1
+kind: Pod
+metadata:
+   name: mavenwebapp
+   labels:
+     app: mavenwebapp
+   namesapace: test-ns
+spec: 
+  containers:
+  - name: mavenwebapp
+    image: dockerhandson/maven-web-application:1
+    ports:
+    -containerport: 8080
+---
+apiVersion: v1
+kind: Pod
+metadata:
+   name: mavenwebapp
+   namespace: test-ns
+spec:
+   type: ClusterIP
+   selector:
+   - port: 80
+     targetPort: 8080
+
+wq!
+---------------------------------------------------
+# to create service run below command with yml file.
+
+kubctl apply -f <mavenwebapp.yml>
+
+to create different application with differnt name
+create a yml file on name javawebapp.yml
+---------------------------------------------------
+apiVersion: v1
+kind: Pod
+metadata:
+   name: javawebapp
+   labels:
+     app: javawebapp
+   namesapace: test-ns
+spec: 
+  containers:
+  - name: javawebapp
+    image: dockerhandson/java-web-application:1
+    ports:
+    -containerport: 8080
+
+---------------------------------------------------
+ 
+excute below command with yml file
+
+kubectl apply -f <javawebapp.yml>
+
+# to connect into javawebapp container shell
+
+kubectl exec -it javawebapp -n test-ns --bash
+
+# to connect with servicename in container shell
+
+curl -v telnet://mavenwebappsvc:80
+
+here service name is mavenwebappsvc
+----------------------------------------------------
+
+Day-7
+=====
+vi multicontainerpod.yaml
+
+creation of pod within two containers
+
+apiVersion: v1
+kind: pod
+metadata:
+  name: nodeapp
+spec:
+  containers:
+  - name: nodeapp
+    image: dockerhandson/node-app-mss:2
+    ports:
+    - containerPort: 9981
+    - nmaee: nginx
+      image: nginx
+      ports:
+      - containerPort: 80
+
+# to create pod 
+kubectl apply -f multicontainerpod.yaml
+
+#to describe pod
+kubectl describe pod nodeapp
+
+# To know logs
+kubectl logs nodeapp
+
+# To process runing in the pod
+kubectl exec nodeapp --ps ef
+
+# to know logs of specific container in a pod
+kubectl logs -c <containerName> <PodName>
+
+# to know list of files in container when multicontainer
+
+kubectl exec -c <containerName> <PodName> --ls -lar
+
+ 
+example:
+there are two containers in a pod
+
+1.nginx -> port:9981 2.nodeapp -> port:80
+
+each container can talk/listening with localhost:port no
+
+# to enter into bash of container
+kubectl exec -it -c <containerName> <PodName>
+
+curl -v http://localhost:9981
+-------------------------------------------------------
+to create service to connect with multiplecontainers
+vi multicontainer.yaml
+apiVersion: v1
+kind: pod
+metadata:
+  name: nodeapp
+spec:
+  containers:
+  - name: nodeapp
+    image: dockerhandson/node-app-mss:2
+    ports:
+    - containerPort: 9981
+    - nmaee: nginx
+      image: nginx
+      ports:
+      - containerPort: 80
+--- 
+apiVersion: v1
+kind: service
+metadata:
+   name: nodeappsvc
+spec:
+  type: ClusterIP
+  selector:
+    app: nodeapp
+   ports:
+   - port: 80
+     targetPort: 80
+     name: nginxapp
+   - port: 9981
+     targetPort: 9981
+     name: node
+------------------------------------------------------------
+
+kubectl apply -f multicontainer.yaml
+
+# to connect with multicontainers with there ports
+
+curl -v http://10.108.102.171:9981
+(or)
+curl -v http://10.108.102.171:9981
+
+responce--> 200 OK
+
+# run this command
+curl -v http://10.108.102.171:9981/jsonData
+
+# two different NameSpace, 1 service in different NameSpace and 1 pod in different NameSpace. both cant reach due to they are in different NameSpace.
+
+to resolve this FQDL.
+FQDL--> fully qualified domine name.
+
+<serviceName>.<namespacename>.svc.Cluster.local
+
+# connect to bash of container and run FQDL 
+
+kubectl exec -it -c <containerName> <PodName>
+
+curl -v http://nodeappsvc.default.svc.cluster.local:9981/jsonData
+-----------------------------------------------------------------------
+
+NodePort:
+Exposes the service on each Node’s IP at a static port. A ClusterIP service, to which the NodePort service will route,
+is automatically created. You’ll be able to contact the NodePort service, from outside the cluster, by using
+<NodeIP>.<NodePort>
+
+(Nodeport Range: 30000 to 32767) 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mavenwebappsvc
+  namespace: <NameSpaceName>
+spec:
+  type: mavenwebapp
+ ports:
+ - port: 80
+   targetPort: 8080
+   nodePort: 30000
+
+lets connect with worker node/master node using ip address
+
+# find PORTS with all nodes in NameSpace
+kubectl get all -n <NameSpaceName>
+
+kubectl get nodes
+
+# run below address in internet
+
+ipaddress:30000/applicationcontext
+
+open port for 30000 in AWS security group
+---------------------------------------------------------------------
+
+Pods creation
+=============
+we should not create pods create directly, insted of that we use externl concepts to create.
+
+ReplicationController
+ReplicaSet
+DaemonSet
+Deployment
+StatefulSet
+
+External-load-balancer
+======================
+
+LoadBalancer
+============
+Exposes the service externally using a cloud provider’s load balancer. NodePort and ClusterIP services, to
+which the external load balancer will route, are automatically created.
+
+
+
+------------------------------------------------------------------------Day-8
+=====
+
+01) Pod & Static Pod difference?
+
+--> Static Pods are managed directly by the kubelet and the API server     does not have any control over these pods. 
+--> The kubelet is responsible to watch each static Pod and restart it     if it crashes. 
+--> The static Pods running on a node are visible on the API server but      cannot be controlled by the API Server. 
+--> Static Pod does not have any associated replication controller,     kubelet service itself watches it and restarts it when it crashes.     There is no health check for static pods.
+
+--> The main use for static Pods is to run a self hosted control plane:      in other words, using the kubelet to supervise the individual            control plane components.
+
+--> Static Pods are always bound to one Kubelet on a specific node.
+    Kubernetes Labels
+
+    kubectl get all -n kube-system -o wide
+
+# to delete pod
+kubectl delete pod <INESS Name>-n kube-system 
+
+How to create static pod?
+
+folder name--> etc/kuberntes/manifests
+
+if you keep pod.yaml file in "pod manifests directory" , the kubelet will mange the file and API server loose its control over the pods creation.
+
+Creation of pods with ReplicationController
+===========================================
+apiVersion: v1
+kind: ReplicationController
+metadata:
+   name: mavenwebapp
+   namespace test-ns
+spec:
+  selector:
+  app: mavenwebapp
+  template: 
+    metadata:
+    name: mavenwebapp
+spec:
+ containers:
+ - name: mavenwebapp
+   image: dockerhandson/maven-web-application:1
+   ports:
+   - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+   name: mavenwebappsvc
+   namespace: test-ns
+spec:
+type: NodePort
+selector:
+   app: mavenwebapp
+ ports:
+ - port: 80
+targetPort: 8080
+nodePort:30000
+
+======================================================================
+
+
+-->Scalin or Scale-out of pods replicas
+-->Pod AutoScaller
+-->Horizontal Scallers
+
+imperativeway Scaling of Pods
+=============================
+kubectl scale rc<rcName> --replicas=<noofReplicas> -n <namesapce>
+
+example:
+
+kubectl scale rc mavenwebapp --replicas=4 -n test-ns
+
+# to know service end points(ep)
+
+kubectl get ep -n <nameSpace>
+-----------------------------------------------------------------------
+
+Declarative way replicas added
+==============================
+
+apiVersion: v1
+kind: ReplicationController
+metadata:
+   name: mavenwebapp
+   namespace test-ns
+spec:
+  selector:
+  app: mavenwebapp
+  template: 
+    metadata:
+    name: mavenwebapp
+spec:
+ replicas: 2
+ containers:
+ - name: mavenwebapp
+   image: dockerhandson/maven-web-application:1
+   ports:
+   - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+   name: mavenwebappsvc
+   namespace: test-ns
+spec:
+type: NodePort
+selector:
+   app: mavenwebapp
+ ports:
+ - port: 80
+targetPort: 8080
+nodePort:30000
+-------------------------------------------------------
+
+# Inorder to delete the pods perminantly delete the replication controller(RC)
+
+kubectl delete rc <rcName> -n <NameSpace>
+
+-------------------------------------------------------
+
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: javawebapp
+  namespace: test-ns
+spec:
+ replicas: 2
+ selector:
+  app: javawebapp
+template:
+metadata:
+   name: javawebapp
+   lables:
+     app: javawebapp
+ spec:
+  containers:
+  - name: javawebapp
+    image: dockerhandson/java-web-app:1
+    ports:
+    - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+   name: javawebappsvc
+   namespace: test-ns
+spec:
+  type: NodePort
+  ports:
+  - port:80
+    targetPort: 8080
+selector:
+  app: javawebapp 
+
+------------------------------------------------------------
+ Day-9
+=======
+
+Replicaset:(RS)
+--> ReplicaSet is the next generation Replication Controller.
+--> The only difference between a ReplicaSet and a Replication Controller right now is the selector support.
+--> ReplicaSet supports the new set based selector requirements as described in the labels user guide whereas a Replication Controller only supports equality based selector requirements.
+
+
+Replication controller selectors are not manadatory.
+Replicaset selectors are mandatory.
+Replication supports only equality based controller.
+ReplicaSet Supports Equality based selectors & also based selectors(More logical operators).
+
+ReplicSet:
+=========
+-------------------------------------------------
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata: 
+   name: javawebapp
+   namespace: test-ns
+spec:
+  replicas: 2
+  selector:
+     matchLabels:
+       app: javawebapp
+  template:
+    metadata:
+      name: javawebapp
+      labels:
+        app: javawebapp
+spec:
+    containers:
+    - name: javawebapp
+      image: dockerhandson/java-web-app:1
+      ports:
+      - containerPort: 8080
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+   name: javawebappsvc
+   namespace: test-ns
+spec:
+  type: NodePort
+  ports:
+  - port:80
+    targetPort: 8080
+selector:
+  app: javawebapp 
+----------------------------------------------------
+# Scalein scaleout pods in imperative way
+
+kubectl scale rs javawebapp --replicas=1 -n test-ns
+kubectl scale rs javawebapp --replicas=3 -n test-ns
+
+# to delete replicaset using yml
+ kubectl delete rc <PodName> -n <NameSpace>
+-----------------------------------------------------
+DaemonSet
+=========
+
+--> DaemonSet make sure that all or some kubernetes Nodes run a copy of a Pod.
+--> When a new node is added to the cluster, a Pod is added to it to match the rest of the nodes and when a node is removed from
+    the cluster, the Pod is garbage collected.
+
+#
+Daemon Set
+apiVersion: apps/v 1
+kind: DaemonSet
+metadata
+name: nginx ds
+spec
+ selector
+  matchLabels
+    app:nginx pod
+ template
+  metadata
+   name: nginx pod
+   labels
+   app: nginx-pod
+spec
+   nodeSelector:
+    name: node 1
+containers:
+ -name webserver
+  image: nginx
+  ports
+  - containerPort 80
+
+----------------------------------------------------
+kubectl apply -f Daemonset.yml
+
+------------------------------------------------------
+Day-10
+======
+
+Deployment
+In Kubernetes, Deployment is the recommended way to deploy Pod or RS, simply because of
+the advance features it comes with.
+Below are some of the key benefits.
+
+--> Deploy a ReplicaSet.
+
+--> Updates pods ( PodTemplateSpec ).
+
+--> Rollback to older Deployment versions.
+
+--> Scale Deployment up or down.
+
+--> Pause and resume the Deployment.
+
+--> Use the status of the Deployment to determine state of replicas.
+
+--> Clean up older RS that you don’t need anymore.
+
+1) what is default deployment stratagies
+   RollingUpdate stratagy
+
+--> rollout deployment
+# kubectl rollout status deplyment javawebapp -n <namespace>
+--> for history
+# kubectl rollout history deployment javawebapp - n <NameSpace>
+--> revision
+kubectl rollout history deployment javawebapp --revision 1 -n <NameSpace>
+
+--> is image/code updated
+
+# kubectl apply -f javawebapp.yaml --record=true
+
+--> By default kubernetes maintain 10 revisions, they all stored in "etcd".
+---------------------------------------------------------
+#RevisionHistoryLimit#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: javawebapp
+ namespace: test-ns
+spec:
+  replicas: 3
+  revisionsHistoryLimit: 5
+  selector: 
+  matchLables:
+    app: javawebapp
+  template:
+    metadata:
+     name: javawebapp
+     labels:
+      app: jabawebapp
+   spec:
+    containers:
+    - name: javawebapp
+      image: dockerhandson/java-web-app:1
+      ports:
+      - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+   name: javawebapp
+   namespace: test-ns
+
+---------------------------------------------------
+--> to rollout undo deployment using below command, we can roll out
+ to any revision by specifying the revision number, if you dnt specify
+any number it will rollout to 1 step back to deployment.
+later it will create new revision, based on the revision you specified.
+
+# kubectl rollout undo deployment javawebapp --to-revision 1 -n <NameSpace>
+
+--> to delete deployment 
+# kubectl delete deployment <DeploymentName> -n <NameSpace>
+
+Recreate
+========
+Recreate deployment strategy involves terminating all existing instances of pods before creating new ones. 
+It leads to downtime during the update process but ensures a clean, predictable transition.
+
+--> How it works:
+Pod Termination: Kubernetes terminates all existing pods.
+Pod Creation: It creates new pods with updated configurations.
+-->Parameters:
+
+Recreate strategy doesn’t have parameters like maxUnavailable or maxSurge.
+Example:
+When using recreate strategy, Kubernetes terminates all existing pods and then creates new ones. This leads to a downtime where the application is not available until all new pods are up and running.
+
+Now let’s test the above example in kubernetes cluster.
+
+Save the below manifest file as recreate-deploy.yaml:
+--------------------------------------------------------
+Day-11
+======
+#rolling update#
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: javawebapp
+   namespace: test-ns
+spec:
+  replicas: 3
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingupdate:
+    axUnavailable: 2
+    maxSurge:
+  selector
+    matchLabels:
+      app: javawebapp
+ template:
+   matadata:
+     name: javawebapp
+   spec:
+     containers:
+     - name: javawebapp
+       image: dockerhandson/java-web-app:14
+       ports:
+       - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: javawebappsvc
+ namespace: test-ns
+spec:
+  type: NodePort
+   ports:
+   - port: 80
+
+------------------------------------------------------------
+maxUnavailable:26-6-2025
+==============
+Deployment ensures that only a certain number of Pods are down while they are being updated. 
+By default, it ensures that at least 75% of the desired number of Pods are up (25% max unavailable).
+
+Deployment also ensures that only a certain number of Pods are created above the desired number of Pods. 
+By default, it ensures that at most 125% of the desired number of Pods are up (25% max surge).
+
+maxSurge:
+========
+
+is an optional field that specifies the maximum number of Pods that can be created over the desired number of Pods. 
+The value can be an absolute number (for example, 5) or a percentage of desired Pods (for example, 10%). 
+The value cannot be 0 if maxUnavailable is 0. The absolute number is calculated from the percentage by rounding up. 
+The default value is 25%.
+
+For example, 
+when this value is set to 30%, 
+the new ReplicaSet can be scaled up immediately when the rolling update starts, 
+such that the total number of old and new Pods does not exceed 130% of desired Pods.
+Once old Pods have been killed, 
+the new ReplicaSet can be scaled up further, ensuring that the total number of Pods running at any time during the update is at most 130% of desired Pods.
+
+Min Ready Seconds:
+=================
+is an optional field that specifies 
+the minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing, 
+for it to be considered available. 
+This defaults to 0 (the Pod will be considered available as soon as it is ready).
+To learn more about when a Pod is considered ready
+
+---------------------------------------------------------------
+# Min Ready Seconds #
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: javawebapp
+   namespace: test-ns
+spec:
+  replicas: 3
+  revisionHistoryLimit: 5
+  minReadySecounds: 60
+  strategy:
+    type: RollingUpdate
+    rollingupdate:
+    axUnavailable: 2
+    maxSurge:
+  selector
+    matchLabels:
+      app: javawebapp
+ template:
+   matadata:
+     name: javawebapp
+   spec:
+     containers:
+     - name: javawebapp
+       image: dockerhandson/java-web-app:14
+       ports:
+       - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: javawebappsvc
+ namespace: test-ns
+spec:
+  type: NodePort
+   ports:
+   - port: 80
+---------------------------------------------------------------
+Blue/ Green (or Red / Black) deployments:
+========================================
+In a blue/green deployment strategy (sometimes referred to as red/black) the old version of the application (green) and
+the new version (blue) get deployed at the same time. When both of these are deployed, users only have access to the
+green; whereas, the blue is available to your QA team for test automation on a separate service or via direct port
+forwarding.
+
+After the new version has been tested and is signed off for release, the service is switched to the blue version with the
+old green version being scaled down:
+
+
+
+What Is Canary Deployment:
+=========================
+In software engineering, canary deployment is the practice of making staged releases. 
+We roll out a software update to a small part of the users first, 
+so they may test it and provide feedback. 
+Once the change is accepted, the update is rolled out to the rest of the users.
+
+
+Resource Requests & Resource Limits
+===================================
+Resource Management for Pods and Containers:
+============================================
+When you specify a Pod, you can optionally specify how much of each resource a container needs. 
+The most common resources to specify are CPU and memory (RAM); there are others.
+
+When you specify the resource request for containers in a Pod, 
+
+----------------------------------------------------------
+Day-12
+======
+1-Core CPU = 1000 millicores
+
+Example:
+========
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mavenwebappdeployment
+  namespace: test-ns
+spec:
+  replicas: 2
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: mavenwebapp
+  template:
+    metadata:
+      name: mavenwebappod
+      labels:
+        app: mavenwebapp
+    spec:
+      containers:
+      - name: mavenwebapp
+        image: dockerhandson/maven-web-application:22
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+
+-----------------------------------------------------
+--> Resource limits should be > or = resource request
+--> the kube-scheduler uses this information to decide which node to place the Pod on. 
+The kubelet also reserves at least the request amount of that system resource specifically for that container to use.
+
+When you specify a resource limit for a container, 
+the kubelet enforces those limits so that 
+the running container is not allowed to use more of that resource than the limit you set.
+
+taint
+=====
+
+
+
+Horizontal scaling via imperative-way
+
+kubectl scale deployment <containerName> --replicas 3 -n <NameSpace>
+
+---------------------------------------------------------------------
+Day-13
+======
+
+Horizontal Pod Autoscaler-HPA
+=============================
+In Kubernetes, a HorizontalPodAutoscaler automatically updates a 
+workload resource (such as a Deployment or StatefulSet), with the 
+aim of automatically scaling the workload to match demand.
+
+Horizontal scaling means that the response to increased load is to 
+deploy more Pods. This is different from vertical scaling, 
+which for Kubernetes would mean assigning more resources 
+(for example: memory or CPU) to the Pods that are already running 
+for the workload.
+
+If the load decreases, and the number of Pods is above the 
+configured minimum, the HorizontalPodAutoscaler instructs the 
+workload resource (the Deployment, StatefulSet, or other similar 
+resource) to scale back down
+
+apiVersion- autoscaling/v2
+
+kubectl get hpa -A
+kubectl get hpa --all-namespaces
+---------------------------------------------------------
+Metric Server is a add-on
+--------------------------
+For resource metrics, this is the metrics.k8s.io API, 
+generally provided by metrics-server. 
+It can be launched as a cluster add-on
+
+
+# kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+--> you can edit the deployment by passing some flags
+# kubectl edit deployment metrics-server -n kube-system -o yaml
+
+to get metric pods
+
+# kubectl top nodes
+
+-----------------------------
+#hpademo.yaml#
+
+apiVersion: apps/v1
+kind: deployment
+metadata:
+   name: hpadeployment
+   labels: 
+     name: hpadeployment
+spec: 
+  replicas: 2
+  selector:
+     matchLabels:
+       name: hpapod
+     template: 
+        metadata:
+           labels: 
+             name: hpapod
+     spec: 
+       containers: 
+       - name: hpapod 
+         image: k8s.gcr.io/hpa-example
+         ports:
+         - name: http
+           containerPort: 80
+         resources: 
+            requests:
+               cpu: "100m"
+               memory: "64Mi"
+            limits: 
+              cpu: "100m"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+   name: HPA
+   labels: hpacluster
+      name: hpaservice
+spec: 
+  ports: 
+    - port: 80
+      targetPort: 80
+    selector:
+      name: hpapod
+    type: NodePort
+    
+        
+    
+              
+------------------------------------------
+# kubectl apply -f hpademo.yml
+# kubectl get all -o wide
+
+ port open: 30891  
+
+--> to put load on pods programaticaly
+# kubectl run -i -t loadgen --image=busybox --rm -- sh
+
+# wget -q0- http://hpaclusterservice
+
+--> run above coommands on Master node <--
+
+-->create hPA by programatically<--
+
+# HPA For above deployment(hpadeployment)
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+name: hpadeploymentautoscaler
+spec:
+scaleTargetRef:
+apiVersion: apps/v1
+kind: Deployment
+name: hpadeployment
+minReplicas: 2
+maxReplicas: 5
+metrics:
+- type: Resource
+resource:
+name: cpu
+target:
+type: Utilization
+averageUtilization: 40
+- type: Resource
+resource:
+name: memory
+target:
+type: Utilization
+averageUtilization: 40
+# Service
+---
+apiVersion: v1
+kind: Service
+metadata:
+name: hpaclusterservice
+labels:
+name: hpaservice
+spec:
+ports:
+- port: 80
+targetPort: 80
+selector:
+name: hpapod
+type: ClusterIP
+
+--------------------------------------
+ Open kubectl terminal in another tab and watch kubectl get pods or 
+ kubect get hpa to see how the auto scaler reacts to increased load.
+# watch kubectl get hpa 
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: javawebappdeployment
+  namespace: test-ns
+spec:
+  selector:
+    matchLabels:
+      app: javawebapp
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      name: javawebapppod
+      labels:
+        app: javawebapp
+    spec:
+      containers:
+      - name: javawebappcontainer
+        image: dockerhandson/java-web-app:4
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 300m
+            memory: 256Mi
+          limits:
+            cpu: 400m
+            memory: 512Mi
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: javawebappdeploymenthpa
+  namespace: test-ns
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: javawebappdeployment
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 90
+  - type: Resource
+    resource:
+     name: memory
+     target:
+      type: Utilization
+      averageUtilization: 90
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: javawebappsvc
+  namespace: test-ns
+spec:
+  type: NodePort
+  selector:
+    app: javawebapp
+  ports:
+  - port: 80
+    targetPort: 8080
+    
+------------------------------------------
+#Day-14:
+========
+
+
